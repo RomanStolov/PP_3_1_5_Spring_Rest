@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <title>User page</title>
+</head>
+<body>
+<!--********** Чёрный навбар-->
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand">
+        <b> <span th:text="${user.getUsername()}"></span></b>
+        <span>with roles:</span>
+        <span th:text="${user.getRole()}"></span>
+    </span>
+    <form th:action="@{/logout}" th:method="POST">
+        <button type="submit" class="btn btn-outline-dark" style="color: lightgrey">Logout</button>
+    </form>
+</nav>
+<div class="row">
+    <!--********** Вертикальная левая панель уже с одним пунктом-->
+    <div class="col-1" style="padding-left: 0px; padding-right: 0px; margin-top: 12px">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="admin-tab" data-toggle="pill" href="#v-pills-user" role="tab"
+               aria-controls="v-pills-home" aria-selected="true" style="margin-left: 10px">User</a>
+        </div>
+    </div>
+    <!--********** Содержимое справа от вертикальной левой панели-->
+    <div class="col-11 bg-light">
+        <div class="tab-content" id="v-pills-tabContent">
+            <!--********** Закладка простого пользователя справа-->
+            <div class="tab-pane fade show active" id="v-pills-user" role="tabpanel" aria-labelledby="admin-tab">
+                <!--********** Это заголовок-->
+                <div class="page-header" style="margin-top: 12px">
+                    <h2>User information-page</h2>
+                </div>
+                <!--********** Использовал карточку для схожести внешней с примером-->
+                <div class="card">
+                    <div class="card-header">
+                        <h5>About user</h5>
+                    </div>
+                    <div class="card-body">
+                        <!--********** Таблица с информацией о текущем пользователе-->
+                        <table class="table table-striped">
+                            <thead class="thead">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Surname</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user: ${user}">
+                                <td th:text="*{user.getId()}"/>
+                                <td th:text="*{user.getUsername()}"/>
+                                <td th:text="*{user.getSurname()}"/>
+                                <td th:text="*{user.getAge()}"/>
+                                <td th:text="*{user.getEmail()}"/>
+                                <td th:text="*{user.getRole()}"/>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--********** Конец таблицы с информацией о текущем пользователе-->
+                    </div>
+                </div>
+                <!--********** Для продлевания заливки серым цветом вниз правого столбца-->
+                <div style="margin-top: 54%">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
