@@ -38,7 +38,7 @@ public interface UserService extends UserDetailsService {
 
     User getById(Long id);
 
-    void delete(User deleteUser);
+    void delete(Long id);
 
 }
 

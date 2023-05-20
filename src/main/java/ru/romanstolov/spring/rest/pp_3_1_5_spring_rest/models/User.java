@@ -92,20 +92,16 @@ public class User implements UserDetails {
 
     /**
      * Метод добавления роли пользователю.
-//     * Дополнительно идёт добавление пользователя к роли.
      */
     public void addRole(Role role) {
         this.roles.add(role);
-//        role.getUsers().add(this);
     }
 
     /**
      * Метод удаления роли у пользователя.
-//     * Дополнительно идёт удаление пользователя у роли.
      */
     public void removeRole(Role role) {
         this.roles.remove(role);
-//        role.getUsers().remove(this);
     }
 
     /**

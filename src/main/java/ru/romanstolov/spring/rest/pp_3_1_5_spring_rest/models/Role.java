@@ -19,20 +19,10 @@ public class Role implements GrantedAuthority {
     private Long id;
     @NotEmpty
     private String name;
-//    @ManyToMany(mappedBy = "roles")
-//    private Set<User> users = new HashSet<>();
 
     public Role() {
 
     }
-
-//    public Set<User> getUsers() {
-//        return users;
-//    }
-
-//    public void setUsers(Set<User> users) {
-//        this.users = users;
-//    }
 
     /**
      * В этом переопределённом методе прописал возврат "name" для нашей роли

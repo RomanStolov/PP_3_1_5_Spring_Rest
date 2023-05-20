@@ -79,8 +79,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Optional<User> findById(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        return optionalUser;
+        return userRepository.findById(id);
     }
 
     /**
@@ -105,9 +104,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Этот метод используется для внесение изменений для СУЩЕСТВУЮЩЕГО пользователя.
+     * Этот метод используется для внесение изменений для УЖЕ СУЩЕСТВУЮЩЕГО пользователя.
      * Изменение пароля я запретил, потому никаких действий с ним я не провожу!
      * Просто перевызываю метод в репозитории для сохранения пользователя с id не равным null.
+     * Пароль к изменению администратору недоступен на форме, потому никаких данных с паролем
+     * в этом методе не провожу в отличие от метода "save" сохраняющего нового работника когда
+     * требуется шифрование пароля перед сохранением в БД.
      */
     @Transactional
     @Override
@@ -125,7 +127,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void delete(User deleteUser) {
+    public void delete(Long id) {
+        User deleteUser = new User();
+        deleteUser.setId(id);
         userRepository.delete(deleteUser);
     }
 

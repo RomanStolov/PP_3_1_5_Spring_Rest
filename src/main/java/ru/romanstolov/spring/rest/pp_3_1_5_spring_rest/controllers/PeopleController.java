@@ -40,9 +40,50 @@ public class PeopleController {
         this.userValidator = userValidator;
     }
 
+    /**
+     * Метод рест возвращающий список всех пользователей при входе под учёткой админа
+     */
     @GetMapping(value = "/admin/users")
     public List<User> showAllUsers() {
         return userService.findAll();
+    }
+
+    /**
+     * Метод рест возвращающий данные текущего пользователя при входе под учёткой простого юзера
+     */
+    @GetMapping(value = "/user")
+    public User showUser(Principal principal) {
+        Optional<User> optionalUser = userService.findByUsername(principal.getName());
+        User user = null;
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
+        return user;
+    }
+
+    /**
+     * Метод рест сохраняющий нового пользователя в БД
+     */
+    @PostMapping(value = "/admin/users")
+    public void addUser(@RequestBody User newUser) {
+        userService.save(newUser);
+    }
+
+    /**
+     * Метод рест изменяющий данные пользователя в БД.
+     * ПО ТРЕГУЛОВУ ЖЕЛАТЕЛЬНО УБРАТЬ ИЗ УРЛА "id"!!!!!!!!!!!!!!!!
+     */
+    @PutMapping(value = "/admin/users/{id}")
+    public void editUser(@RequestBody User user) {
+        userService.update(user);
+    }
+
+    /**
+     * Метод рест удаляющий пользователя из БД.
+     */
+    @DeleteMapping(value = "/admin/users/{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
+        userService.delete(id);
     }
 
     /**
@@ -101,7 +142,7 @@ public class PeopleController {
     /**
      * Метод возвращающий страницу простого пользователя.
      */
-    @GetMapping(value = "/user")
+//    @GetMapping(value = "/user")
     public String getUserPage(Model model, Principal principal) {
         Optional<User> optionalUser = userService.findByUsername(principal.getName());
         User user = null;
@@ -119,7 +160,7 @@ public class PeopleController {
      * то сохранения нового пользователя не происходит!
      * В конце происходит редирект обратно на страницу админа.
      */
-    @PostMapping(value = "/admin/users")
+//    @PostMapping(value = "/admin/users")
     public String addUser(@ModelAttribute(value = "newUser") User newUser,
                           BindingResult bindingResult) {
         userValidator.validate(newUser, bindingResult);
@@ -134,8 +175,8 @@ public class PeopleController {
      * Метод администратора сохраняющий в БД измененную информацию о пользователе.
      * После сохранения отредактированного пользователя делаю редирект обратно на страницу админа.
      */
-    @PutMapping(value = "/admin/users/{id}")
-    public String editUser(@ModelAttribute(value = "user") User user) {
+//    @PutMapping(value = "/admin/users/{id}")
+    public String oldEditUser(@ModelAttribute(value = "user") User user) {
         userService.update(user);
         return "redirect:/admin/users";
     }
@@ -146,11 +187,9 @@ public class PeopleController {
      * с этим установленным "id" в сервис на удаление.
      * После удаления пользователя по "id" делаю редирект обратно на страницу админа.
      */
-    @DeleteMapping(value = "/admin/users/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
-        User user = new User();
-        user.setId(id);
-        userService.delete(user);
+//    @DeleteMapping(value = "/admin/users/{id}")
+    public String oldDeleteUser(@PathVariable("id") Long id) {
+        userService.delete(id);
         return "redirect:/admin/users";
     }
 
