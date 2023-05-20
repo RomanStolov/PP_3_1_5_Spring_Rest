@@ -28,7 +28,8 @@ import java.util.Optional;
  * - с ролью только пользователя: user, user;
  * - с ролью админа и пользователя: adminuser, adminuser.
  */
-@Controller
+//@Controller
+@RestController
 public class PeopleController {
     private final UserServiceImpl userService;
     private final UserValidator userValidator;
@@ -37,6 +38,11 @@ public class PeopleController {
     public PeopleController(UserServiceImpl userService, UserValidator userValidator) {
         this.userService = userService;
         this.userValidator = userValidator;
+    }
+
+    @GetMapping(value = "/admin/users")
+    public List<User> showAllUsers() {
+        return userService.findAll();
     }
 
     /**
@@ -54,7 +60,7 @@ public class PeopleController {
      * Если допущены ошибки при вводе имени нового пользователя, то происходит возврат обратно на форму регистрации!
      */
     @PostMapping(value = "/registration")
-    public String registrationPutUser(@Validated @ModelAttribute(value = "registrUser") User registrUser,
+    public String registrationNewUser(@Validated @ModelAttribute(value = "registrUser") User registrUser,
                                       BindingResult bindingResult) {
         Role role = new Role("ROLE_USER");
         Collection<Role> roles = new ArrayList<>();
@@ -69,35 +75,41 @@ public class PeopleController {
     }
 
     /**
-     * Метод возвращающий страницу простого пользователя.
-     */
-    @GetMapping(value = "/user")
-    public String getUserInfoPage(Model model, Principal principal) {
-        Optional<User> optionalUser= userService.findByUsername(principal.getName());
-        User user = optionalUser.get();
-        model.addAttribute("user", user);
-        return "user/user";
-    }
-
-    /**
      * Метод возвращающий страницу администратора.
      * В модель загрузил:
      * - список всех пользователей;
-     * - текущего пользователя-админа с извлечением из Optional;
+     * - текущего пользователя-админа с проверкой на "null" и извлечением из Optional;
      * - нового пользователя для создания;
      * - список всех возможных ролей.
      */
-    @GetMapping(value = "/admin/users")
-    public String getAllUsers(Model model, Principal principal) {
+//    @GetMapping(value = "/admin/users")
+    public String getAdminPage(Model model, Principal principal) {
         List<User> listUsers = userService.findAll();
         model.addAttribute("listUsers", listUsers);
-        Optional<User> optionalUser= userService.findByUsername(principal.getName());
-        User user = optionalUser.get();
+        Optional<User> optionalUser = userService.findByUsername(principal.getName());
+        User user = null;
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
         model.addAttribute("user", user);
         model.addAttribute("newUser", new User());
         Collection<Role> listAllRoles = userService.getListRole();
         model.addAttribute("listAllRoles", listAllRoles);
         return "admin/admin";
+    }
+
+    /**
+     * Метод возвращающий страницу простого пользователя.
+     */
+    @GetMapping(value = "/user")
+    public String getUserPage(Model model, Principal principal) {
+        Optional<User> optionalUser = userService.findByUsername(principal.getName());
+        User user = null;
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }
+        model.addAttribute("user", user);
+        return "user/user";
     }
 
     /**
@@ -108,7 +120,7 @@ public class PeopleController {
      * В конце происходит редирект обратно на страницу админа.
      */
     @PostMapping(value = "/admin/users")
-    public String putUser(@ModelAttribute(value = "newUser") User newUser,
+    public String addUser(@ModelAttribute(value = "newUser") User newUser,
                           BindingResult bindingResult) {
         userValidator.validate(newUser, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -123,7 +135,7 @@ public class PeopleController {
      * После сохранения отредактированного пользователя делаю редирект обратно на страницу админа.
      */
     @PutMapping(value = "/admin/users/{id}")
-    public String patchUser(@ModelAttribute(value = "user") User user) {
+    public String editUser(@ModelAttribute(value = "user") User user) {
         userService.update(user);
         return "redirect:/admin/users";
     }

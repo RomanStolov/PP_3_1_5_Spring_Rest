@@ -111,6 +111,9 @@
                                                         <!--********* Тело модального окна кнопки "Edit"-->
                                                         <div class="modal-body text-center">
                                                             <!--********** Форма с данными пользователя для редактирования-->
+<!--                                                            <form method="PUT"-->
+<!--                                                            th:action="@{/admin/users/{id} (id=${user.id})}"-->
+<!--                                                            th:object="${user}">                                                            -->
                                                             <form method="POST"
                                                                   th:action="@{/admin/users/{id} (id=${user.id})}"
                                                                   th:object="${user}">
@@ -219,6 +222,9 @@
                                                         <!--********* Тело модального окна кнопки "Delete"-->
                                                         <div class="modal-body text-center">
                                                             <!--********** Форма с данными пользователя для удаления-->
+<!--                                                            <form method="DELETE"-->
+<!--                                                                  th:action="@{/admin/users/{id} (id=${user.id})}"-->
+<!--                                                                  th:object="${user}">                                                                  -->
                                                             <form method="POST"
                                                                   th:action="@{/admin/users/{id} (id=${user.id})}"
                                                                   th:object="${user}">
