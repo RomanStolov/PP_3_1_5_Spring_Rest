@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.models.Role;
 
+import java.util.Optional;
+
 /**
  * Прикольно, что тут можно самому написывать любые методы задавая параметры метода и тип возвращаемого значения
  * при совершенно произвольном наименовании самого метода!
@@ -15,5 +17,7 @@ import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.models.Role;
  */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+
+    Optional<Role> findByName(String name);
 
 }

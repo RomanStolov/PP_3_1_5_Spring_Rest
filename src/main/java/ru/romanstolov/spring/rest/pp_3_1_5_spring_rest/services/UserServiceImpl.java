@@ -13,6 +13,7 @@ import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.repositories.UserReposito
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.utils.UserValidator;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -133,4 +134,16 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(deleteUser);
     }
 
+    /**
+     * Возвращает коллекцию ролей согласно запроса из метода рест-контроллера сохранения нового пользователя
+     */
+    @Override
+    public Collection<Role> createCollectionRoles(String[] roles) {
+        Collection<Role> rolesCollection = new HashSet<>();
+        for (String role: roles) {
+            Optional<Role> optionalRole = roleRepository.findByName(role);
+            optionalRole.ifPresent(rolesCollection::add);
+        }
+        return rolesCollection;
+    }
 }

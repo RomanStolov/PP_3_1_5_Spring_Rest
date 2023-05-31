@@ -40,5 +40,7 @@ public interface UserService extends UserDetailsService {
 
     void delete(Long id);
 
+    Collection<Role> createCollectionRoles(String[] roles);
+
 }
 

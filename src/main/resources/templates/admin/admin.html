@@ -11,10 +11,8 @@
 <body>
 <!--********** Чёрный навбар-->
 <nav class="navbar navbar-dark bg-dark">
-    <span class="navbar-brand">
-        <b> <span th:text="${user.getUsername()}"></span></b>
-        <span>with roles:</span>
-        <span th:text="${user.getRole()}"></span>
+    <span class="navbar-brand" id="navbarBrand">
+        <!--********** СКРИПТ **********-->
     </span>
     <form th:action="@{/logout}" th:method="POST">
         <button type="submit" class="btn btn-outline-dark" style="color: lightgrey">Logout</button>
@@ -80,239 +78,8 @@
                                         <th scope="col">Delete</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr th:each="user: ${listUsers}">
-                                        <td th:text="*{user.getId()}"/>
-                                        <td th:text="*{user.getUsername()}"/>
-                                        <td th:text="*{user.getSurname()}"/>
-                                        <td th:text="*{user.getAge()}"/>
-                                        <td th:text="*{user.getEmail()}"/>
-                                        <td th:text="*{user.getRole()}"/>
-                                        <!--********** Кнопка "Edit"-->
-                                        <td>
-                                            <button type="button" class="btn btn-info" data-toggle="modal"
-                                                    th:data-target="${'#editModal' + user.id}">
-                                                Edit
-                                            </button>
-                                            <!--********** Модальное окно кнопки "Edit"-->
-                                            <div class="modal fade" th:id="${'editModal' + user.id}">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <!--********* Заголовок модального окна кнопки "Edit"-->
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="editModalLabel">
-                                                                Edit user
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <!--********* Тело модального окна кнопки "Edit"-->
-                                                        <div class="modal-body text-center">
-                                                            <!--********** Форма с данными пользователя для редактирования-->
-<!--                                                            <form method="PUT"-->
-<!--                                                            th:action="@{/admin/users/{id} (id=${user.id})}"-->
-<!--                                                            th:object="${user}">                                                            -->
-                                                            <form method="POST"
-                                                                  th:action="@{/admin/users/{id} (id=${user.id})}"
-                                                                  th:object="${user}">
-
-                                                                <input type="hidden" name="_method" value="PUT">
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label for="noEditIdEditUser"
-                                                                           class="form-label font-weight-bold">ID</label>
-                                                                    <input type="number" th:value="${user.id}"
-                                                                           class="form-control"
-                                                                           id="noEditIdEditUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="editUsernameEditUser">Username</label>
-                                                                    <input type="text" th:name="username"
-                                                                           th:value="${user.username}"
-                                                                           class="form-control"
-                                                                           id="editUsernameEditUser"/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="editSurnameEditUser">Surname</label>
-                                                                    <input type="text" th:name="surname"
-                                                                           th:value="${user.surname}"
-                                                                           class="form-control"
-                                                                           id="editSurnameEditUser"/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="editAgeEditUser">Age</label>
-                                                                    <input type="number" th:name="age"
-                                                                           th:value="${user.age}"
-                                                                           class="form-control" id="editAgeEditUser"/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="editEmailEditUser">E-mail</label>
-                                                                    <input type="email" th:name="email"
-                                                                           th:value="${user.email}"
-                                                                           class="form-control" id="editEmailEditUser"/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditPasswordEditUser">Password</label>
-                                                                    <input type="password" th:name="password"
-                                                                           th:value="${user.password}"
-                                                                           class="form-control"
-                                                                           id="noEditPasswordEditUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="editRoleEditUser">Role</label>
-                                                                    <select name="roles" class="form-select col-12"
-                                                                            size="2">
-                                                                        <option th:each="role:${listAllRoles}"
-                                                                                th:value="${role.id}"
-                                                                                th:text="${role.name}"
-                                                                                id="editRoleEditUser"/>
-                                                                    </select>
-                                                                </div>
-                                                                <!--********** Футер модального окна кнопки "Edit" (включил его в форму
-                                                                               чтобы кнопки работали и кнопки сделал "submit"-->
-                                                                <div class="modal-footer">
-                                                                    <button type="submit" class="btn btn-secondary"
-                                                                            data-dismiss="modal">
-                                                                        Close
-                                                                    </button>
-                                                                    <button type="submit" class="btn btn-primary">
-                                                                        Edit
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <!--********** Кнопка "Delete"-->
-                                        <td>
-                                            <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                    th:data-target="${'#deleteModal' + user.id}">
-                                                Delete
-                                            </button>
-                                            <!--********** Модальное окно кнопки "Delete"-->
-                                            <div class="modal fade" th:id="${'deleteModal' + user.id}">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <!--********* Заголовок модального окна кнопки "Delete"-->
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="deleteModalLabel">
-                                                                Delete user
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <!--********* Тело модального окна кнопки "Delete"-->
-                                                        <div class="modal-body text-center">
-                                                            <!--********** Форма с данными пользователя для удаления-->
-<!--                                                            <form method="DELETE"-->
-<!--                                                                  th:action="@{/admin/users/{id} (id=${user.id})}"-->
-<!--                                                                  th:object="${user}">                                                                  -->
-                                                            <form method="POST"
-                                                                  th:action="@{/admin/users/{id} (id=${user.id})}"
-                                                                  th:object="${user}">
-
-                                                                <input type="hidden" name="_method" value="DELETE">
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label for="noEditIdDeleteUser"
-                                                                           class="form-label font-weight-bold">ID</label>
-                                                                    <input type="number" th:value="${user.id}"
-                                                                           class="form-control"
-                                                                           id="noEditIdDeleteUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditUsernameDeleteUser">Username</label>
-                                                                    <input type="text" th:name="username"
-                                                                           th:value="${user.username}"
-                                                                           class="form-control"
-                                                                           id="noEditUsernameDeleteUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditSurnameDeleteUser">Surname</label>
-                                                                    <input type="text" th:name="surname"
-                                                                           th:value="${user.surname}"
-                                                                           class="form-control"
-                                                                           id="noEditSurnameDeleteUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditAgeDeleteUser">Age</label>
-                                                                    <input type="number" th:name="age"
-                                                                           th:value="${user.age}"
-                                                                           class="form-control" id="noEditAgeDeleteUser"
-                                                                           readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditEmailDeleteUser">E-mail</label>
-                                                                    <input type="email" th:name="email"
-                                                                           th:value="${user.email}"
-                                                                           class="form-control"
-                                                                           id="noEditEmailDeleteUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditPasswordDeleteUser">Password</label>
-                                                                    <input type="password" th:name="password"
-                                                                           th:value="${user.password}"
-                                                                           class="form-control"
-                                                                           id="noEditPasswordDeleteUser" readonly/>
-                                                                </div>
-
-                                                                <div class="form-group col-8 offset-2">
-                                                                    <label class="form-label font-weight-bold"
-                                                                           for="noEditRoleDeleteUser">Role</label>
-                                                                    <select name="roles" class="form-control col-12"
-                                                                            size="2">
-                                                                        <option th:each="role:${listAllRoles}"
-                                                                                th:value="${role.id}"
-                                                                                th:text="${role.name}"
-                                                                                id="noEditRoleDeleteUser"/>
-                                                                    </select>
-                                                                </div>
-                                                                <!--********** Футер модального окна кнопки "Delete" (включил его в форму
-                                                                               чтобы кнопки работали и кнопки сделал "submit"-->
-                                                                <div class="modal-footer">
-                                                                    <button type="submit" class="btn btn-secondary"
-                                                                            data-dismiss="modal">
-                                                                        Close
-                                                                    </button>
-                                                                    <button type="submit" class="btn btn-danger">
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <tbody id="tableBodyUsers">
+                                    <!--********** СКРИПТ **********-->
                                     </tbody>
                                 </table>
                                 <!--********** Конец таблицы-->
@@ -332,13 +99,12 @@
                             </div>
                             <div class="card-body text-center">
                                 <!--********** Форма с данными нового пользователя для добавления в БД-->
-                                <form method="POST" th:action="@{/admin/users}" th:object="${newUser}">
+                                <form id="formNew">
 
                                     <div class="form-group col-4 offset-4">
                                         <label class="form-label font-weight-bold"
                                                for="newUserUsername">Username</label>
-                                        <input type="text" th:name="username" th:value="${newUser.username}"
-                                               class="form-control" id="newUserUsername"
+                                        <input type="text" class="form-control" id="newUserUsername"
                                                placeholder="Username" required
                                                autofocus/>
                                     </div>
@@ -346,41 +112,36 @@
                                     <div class="form-group col-4 offset-4">
                                         <label class="form-label font-weight-bold"
                                                for="newUserSurname">Surname</label>
-                                        <input type="text" th:name="surname" th:value="${newUser.surname}"
-                                               class="form-control" id="newUserSurname"
+                                        <input type="text" class="form-control" id="newUserSurname"
                                                placeholder="Surname" required/>
                                     </div>
 
                                     <div class="form-group col-4 offset-4">
                                         <label class="form-label font-weight-bold"
                                                for="newUserAge">Age</label>
-                                        <input type="number" th:name="age" th:value="${newUser.age}"
-                                               class="form-control" id="newUserAge"
+                                        <input type="number" class="form-control" id="newUserAge"
                                                placeholder="Age" required/>
                                     </div>
 
                                     <div class="form-group col-4 offset-4">
                                         <label class="form-label font-weight-bold"
                                                for="newUserEmail">E-mail</label>
-                                        <input type="email" th:name="email" th:value="${newUser.email}"
-                                               class="form-control" id="newUserEmail"
+                                        <input type="email" class="form-control" id="newUserEmail"
                                                placeholder="E-mail" required/>
                                     </div>
 
                                     <div class="form-group col-4 offset-4">
                                         <label class="form-label font-weight-bold"
                                                for="newUserPassword">Password</label>
-                                        <input type="password" th:name="password" th:value="${newUser.password}"
-                                               class="form-control" id="newUserPassword"
+                                        <input type="password" class="form-control" id="newUserPassword"
                                                placeholder="Password" required/>
                                     </div>
 
                                     <div class="form-group col-4 offset-4">
                                         <label class="form-label font-weight-bold"
                                                for="newUserRole">Role</label>
-                                        <select name="roles" class="form-select col-12" size="2">
-                                            <option th:each="role:${listAllRoles}" th:value="${role.id}"
-                                                    th:text="${role.name}" id="newUserRole"/>
+                                        <select multiple class="form-control col-12" size="2" id="newUserRole">
+                                            <!--********** СКРИПТ **********-->
                                         </select>
                                     </div>
                                     <!--********** Кнопка "Save new user"-->
@@ -419,15 +180,8 @@
                                 <th scope="col">Role</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="user: ${user}">
-                                <td th:text="*{user.getId()}"/>
-                                <td th:text="*{user.getUsername()}"/>
-                                <td th:text="*{user.getSurname()}"/>
-                                <td th:text="*{user.getAge()}"/>
-                                <td th:text="*{user.getEmail()}"/>
-                                <td th:text="*{user.getRole()}"/>
-                            </tr>
+                            <tbody id="tableBodyUser">
+                            <!--********** СКРИПТ **********-->
                             </tbody>
                         </table>
                         <!--********** Конец таблицы с информацией о текущем пользователе-->
@@ -440,6 +194,149 @@
         </div>
     </div>
 </div>
+<!--********** Модальное окно кнопки "Edit"-->
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--********* Заголовок модального окна кнопки "Edit"-->
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">
+                    Edit user
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!--********* Тело модального окна кнопки "Edit"-->
+            <div class="modal-body text-center">
+                <!--********** Форма с данными пользователя для редактирования-->
+                <form id="formEdit">
+
+                    <div class="form-group col-8 offset-2">
+                        <label for="noEditIdEditUser" class="form-label font-weight-bold">ID</label>
+                        <input type="number" class="form-control" id="noEditIdEditUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="editUsernameEditUser">Username</label>
+                        <input type="text" class="form-control" id="editUsernameEditUser"/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="editSurnameEditUser">Surname</label>
+                        <input type="text" class="form-control" id="editSurnameEditUser"/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="editAgeEditUser">Age</label>
+                        <input type="number" class="form-control" id="editAgeEditUser"/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="editEmailEditUser">E-mail</label>
+                        <input type="email" class="form-control" id="editEmailEditUser"/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditPasswordEditUser">Password</label>
+                        <input type="password" class="form-control" id="noEditPasswordEditUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="editRoleEditUser">Role</label>
+                        <select multiple class="form-control col-12" size="2" id="editRoleEditUser">
+                            <!--********** СКРИПТ **********-->
+                        </select>
+                    </div>
+                    <!--********** Футер модального окна кнопки "Edit" (включил его в форму
+                                   чтобы кнопки работали и кнопку сделал "submit"-->
+                    <div class="modal-footer">
+                        <button type="button" id="editClose" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Edit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--********** Модальное окно кнопки "Delete"-->
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--********* Заголовок модального окна кнопки "Delete"-->
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    Delete user
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!--********* Тело модального окна кнопки "Delete"-->
+            <div class="modal-body text-center">
+                <!--********** Форма с данными пользователя для удаления-->
+                <form id="formDelete">
+
+                    <div class="form-group col-8 offset-2">
+                        <label for="noEditIdDeleteUser" class="form-label font-weight-bold">ID</label>
+                        <input type="number" class="form-control" id="noEditIdDeleteUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditUsernameDeleteUser">Username</label>
+                        <input type="text" class="form-control" id="noEditUsernameDeleteUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditSurnameDeleteUser">Surname</label>
+                        <input type="text" class="form-control" id="noEditSurnameDeleteUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditAgeDeleteUser">Age</label>
+                        <input type="number" class="form-control" id="noEditAgeDeleteUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditEmailDeleteUser">E-mail</label>
+                        <input type="email" th:name="email" class="form-control" id="noEditEmailDeleteUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditPasswordDeleteUser">Password</label>
+                        <input type="password" class="form-control" id="noEditPasswordDeleteUser" readonly/>
+                    </div>
+
+                    <div class="form-group col-8 offset-2">
+                        <label class="form-label font-weight-bold" for="noEditRoleDeleteUser">Role</label>
+                        <select multiple class="form-control col-12" size="2" id="noEditRoleDeleteUser">
+                            <!--********** СКРИПТ **********-->
+                        </select>
+                    </div>
+                    <!--********** Футер модального окна кнопки "Delete" (включил его в форму
+                                   чтобы кнопки работали и кнопку сделал "submit"-->
+                    <div class="modal-footer">
+                        <button type="button" id="deleteClose" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/admin.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

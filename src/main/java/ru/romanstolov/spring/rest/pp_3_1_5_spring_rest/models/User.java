@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.utils.InitiateUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,18 +50,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Size(min = 3, max = 25, message = "Введите имя(логин) длиною от 3 до 25 символов!")
     private String username;
-    @NotNull
-    @Size(min = 1, max = 25, message = "Введите фамилию длиною от 1 до 25 символов!")
     private String surname;
-    @Min(value = 1, message = "Введите значение возраста от 1 до 110!")
-    @Max(value = 110, message = "Введите значение возраста от 1 до 110!")
     private Byte age;
-    @Email(message = "Введите правильный адрес почты!")
     private String email;
-    @NotEmpty(message = "Введите пароль длиною от 5 до 30 символов!")
     private String password;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",

@@ -11,10 +11,8 @@
 <body>
 <!--********** Чёрный навбар-->
 <nav class="navbar navbar-dark bg-dark">
-    <span class="navbar-brand">
-        <b> <span th:text="${user.getUsername()}"></span></b>
-        <span>with roles:</span>
-        <span th:text="${user.getRole()}"></span>
+    <span class="navbar-brand" id="navbarBrand">
+        <!--********** СКРИПТ **********-->
     </span>
     <form th:action="@{/logout}" th:method="POST">
         <button type="submit" class="btn btn-outline-dark" style="color: lightgrey">Logout</button>
@@ -55,15 +53,8 @@
                                 <th scope="col">Role</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="user: ${user}">
-                                <td th:text="*{user.getId()}"/>
-                                <td th:text="*{user.getUsername()}"/>
-                                <td th:text="*{user.getSurname()}"/>
-                                <td th:text="*{user.getAge()}"/>
-                                <td th:text="*{user.getEmail()}"/>
-                                <td th:text="*{user.getRole()}"/>
-                            </tr>
+                            <tbody id="tableBodyUser">
+                            <!--********** СКРИПТ **********-->
                             </tbody>
                         </table>
                         <!--********** Конец таблицы с информацией о текущем пользователе-->
@@ -76,6 +67,8 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/js/user.js"></script>
+<!--<script th:src="@{/js/user.js}" type="module" src="D:\java\javaprj\kata_3_1_4\src\main\resources\static\js\editUser.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -85,5 +78,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
 </body>
 </html>

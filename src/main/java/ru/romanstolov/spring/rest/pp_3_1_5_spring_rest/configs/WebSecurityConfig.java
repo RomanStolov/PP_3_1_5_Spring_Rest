@@ -68,8 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .csrf()
-//                .disable()
+                // Ниже две строки вставил для работы методов: "POST", "PUT", "DELETE" из JS  а не со страниц
+                .csrf()
+                .disable()
                 .authorizeRequests()
                 .antMatchers("/registration", "/index", "/")
                 .not().fullyAuthenticated()
@@ -97,5 +98,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /**
+     * Метод возвращает бин маппера, использую в рест-контроллере
+     */
 
 }

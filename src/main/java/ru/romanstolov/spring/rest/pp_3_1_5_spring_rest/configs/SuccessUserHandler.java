@@ -32,7 +32,8 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
      * <p>
      * МОИ ДЕЙСТВИЯ:
      * - Настроил отлов в хендлере в таком порядке: ADMIN->USER->"/". (ADMIN точно должен быть первым
-     * так как есть пользователи с ролями "ROLE_ADMIN" и "ROLE_USER" одновременно в утилитном классе.
+     * так как есть пользователи с ролями "ROLE_ADMIN" и "ROLE_USER" одновременно при первоначальном
+     * заполнении БД с помощью утилитного класса.
      * !!!!!
      * Убрать ниже комменты в коде перед отправкой на проверку!
      */
@@ -43,10 +44,12 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
         System.out.println("* Хэндлер роли получил");
         if (roles.contains("ROLE_ADMIN")) {
-            httpServletResponse.sendRedirect("/admin/users");
+//            httpServletResponse.sendRedirect("/admin/users");
+            httpServletResponse.sendRedirect("/admin/page");
             System.out.println("* Хэндлер ADMIN`a увидел");
         } else if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/user");
+//            httpServletResponse.sendRedirect("/user");
+            httpServletResponse.sendRedirect("/user/page");
             System.out.println("* Хэндлер USER`а увидел");
         } else {
             httpServletResponse.sendRedirect("/");
