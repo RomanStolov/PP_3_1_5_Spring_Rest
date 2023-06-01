@@ -4,12 +4,11 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
- * Роль является неглавной стороной, поэтому коллекция пользователей аннотирована "mappedBy"
+ * Убрал двунаправленную связь между User и Role присутствующую в прошлой задаче, так как иначе происходила рекурсия
+ * в методах рест-контроллера.
  */
 @Entity
 @Table(name = "roles")
@@ -82,7 +81,7 @@ public class Role implements GrantedAuthority {
     }
 
     /**
-     * Переопределил и оставил только само имя
+     * Переопределил метод и оставил только само имя.
      */
     @Override
     public String toString() {

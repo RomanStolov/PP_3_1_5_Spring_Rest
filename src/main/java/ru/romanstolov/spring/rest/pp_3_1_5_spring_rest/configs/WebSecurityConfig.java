@@ -54,21 +54,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * **********************************************************************************
      * <p>
      * МОИ ДЕЙСТВИЯ:
-     * - Разрешил всем доступ к урлам: "/registration", "/index", "/";
+     * - Разрешил ВСЕМ доступ к урлам: "/registration", "/index", "/";
      * - Разрешил доступ пользователям с ролью "ROLE_ADMIN" к урлам "/admin/**";
      * - Разрешил доступ пользователям с ролями "ROLE_ADMIN" и "ROLE_USER" к урлам "/user/**";
      * - Запретил все остальные урлы для не авторизированных пользователей.
      * - Добавил с помощью ".loginPage("/login")" перенаправление через класс "MvcConfig" и метод
-     * "addViewControllers" в нём прямое открытие моей кастомной странички логина "login.html" с внешним
+     * "addViewControllers" в нём на открытие моей кастомной странички логина "login.html" с внешним
      * видом под требование таски 3.1.4.
      * (Нужно отметить отдельно, что если бы использовались по умолчанию не "username" и "password", а,
      * скажем, "e-mail" и "password", тогда нужно было бы дописать:
      * .        ".loginPage("/login").usernameParameter("email").passwordParameter("password")").
+     * - добавил ".csrf().disable()" для работы запросов "POST", "PUT" и "DELETE" из JS  а не со страниц
+     * как раньше.
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // Ниже две строки вставил для работы методов: "POST", "PUT", "DELETE" из JS  а не со страниц
                 .csrf()
                 .disable()
                 .authorizeRequests()
@@ -98,9 +99,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    /**
-     * Метод возвращает бин маппера, использую в рест-контроллере
-     */
 
 }

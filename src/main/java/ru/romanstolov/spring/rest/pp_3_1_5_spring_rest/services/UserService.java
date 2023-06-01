@@ -13,7 +13,7 @@ import java.util.Optional;
  * "public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException",
  * который реализовал в "UserServiceImpl".
  * <p>
- * @see UserServiceImpl#loadUserByUsername(String)
+ * @see UserServiceImpl#loadUserByUsername
  * <p>
  * Этот метод возвращает UserDetails - обёрнутого пользователя текущей сессии.
  */
@@ -23,12 +23,10 @@ public interface UserService extends UserDetailsService {
     Collection<Role> getListRole();
 
     /**
-     * Добавил новый метод поиска пользователя по "username"
+     * Добавил в задаче 3.1.3 новый метод поиска пользователя по "username"
      * Его продублировал в интерфейс "UserRepository"
      */
     Optional<User> findByUsername(String username);
-
-    Optional<User> findById(Long id);
 
     List<User> findAll();
 
@@ -36,10 +34,13 @@ public interface UserService extends UserDetailsService {
 
     void update(User user);
 
-    User getById(Long id);
+    User findById(Long id);
 
     void delete(Long id);
 
+    /**
+     * Добавил в таске 3.1.5
+     */
     Collection<Role> createCollectionRoles(String[] roles);
 
 }

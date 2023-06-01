@@ -287,5 +287,4 @@ function rolesToString(roles) {
     }
     rolesString = rolesString.substring(0, rolesString.length - 2);
     return rolesString;
-
 }

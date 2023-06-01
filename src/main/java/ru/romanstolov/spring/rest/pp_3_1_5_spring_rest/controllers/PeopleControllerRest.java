@@ -1,6 +1,8 @@
 package ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.models.Role;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.models.User;
@@ -17,13 +19,22 @@ import java.util.Optional;
  * Ссылки другие для проверки работоспособности в том же постмане:
  * http://localhost:8080/user
  * http://localhost:8080/admin/users
- * Решил не заморачиваться с двумя контроллерами и запихал всё в один "развязав" доступ по пафу префиксами
- * админа и юзера.
+ * Вынес часть методов (для загрузки самих страничек админа и пользователя, а так же методы регистрации
+ * нового пользователя на сайте) в этот отдельный контроллер. Его сделал REST добавив аннотацию
+ * @RestController. Доступ к функционалу по-прежнему "развязан" по пафу префиксами админа и юзера.
  * <p>
  * Для проверки работоспособности программы с отображением разных ролей следующие пары логин-пароль:
  * - с ролью только админа: admin, admin;
  * - с ролью только пользователя: user, user;
  * - с ролью админа и пользователя: adminuser, adminuser.
+ * <p>
+ * НЕ СТАЛ ДОБАВЛЯТЬ СЛЕДУЮЩИЙ ФУНКЦИОНАЛ, так как об этом в задаче не сказано:
+ * - валидацию данных со стороны сервера как на сами данные, так и на наличие пользователя с уже
+ * существующим таким же логином (в прошлых задачах это делал, а в этой убрал для ускорения тестирования);
+ * - создавать кастомные исключения с последующей их генерацией, перехватом и последующей отправкой
+ * ResponseEntity соответственно с HttpStatus.NOT_FOUND или HttpStatus.BAD_REQUEST;
+ * - создавать отдельный класс UserDTO и использовать ModelMapper для того чтобы "развязать" нашу
+ * модель с объектом отправляемым по сети в виде джейсона.
  */
 @RestController
 public class PeopleControllerRest {
@@ -35,8 +46,7 @@ public class PeopleControllerRest {
     }
 
     /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест возвращающий список всех пользователей при входе под учёткой админа
+     * Метод возвращающий список всех пользователей при входе под учёткой админа.
      */
     @GetMapping(value = "/admin/users")
     public List<User> getAllUsers() {
@@ -44,8 +54,7 @@ public class PeopleControllerRest {
     }
 
     /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест возвращающий список всех Ролей при входе под учёткой админа
+     * Метод возвращающий список всех Ролей при входе под учёткой админа.
      */
     @GetMapping(value = "/admin/roles")
     public Collection<Role> getAllRoles() {
@@ -53,9 +62,17 @@ public class PeopleControllerRest {
     }
 
     /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест возвращающий данные текущего пользователя (для заполнения навбара в шапке
-     * страницы и для заполнения таблицы с информацией о текущем пользователе)
+     * Метод возвращающий данные пользователя из БД по "id" при входе под учёткой админа.
+     */
+    @GetMapping(value = "/admin/users/{id}")
+    public User editUser(@PathVariable(value = "id") Long id) {
+        return userService.findById(id);
+    }
+
+    /**
+     * Метод возвращающий данные текущего пользователя (для заполнения навбара в шапке
+     * страницы и для заполнения таблицы с информацией о текущем пользователе). Нужен как для
+     * админа, так и для простого пользователя.
      */
     @GetMapping(value = "/user")
     public User getUser(Principal principal) {
@@ -68,42 +85,37 @@ public class PeopleControllerRest {
     }
 
     /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест сохраняющий нового пользователя в БД
+     * Метод сохраняющий нового пользователя в БД при входе под учёткой админа.
+     * Отправляем обратно HTTP ответ с пустым телом и статусом "200".
+     * Решил с UserDTO и ModelMapper не усложнять функционал, так как об этом в таске не сказано.
      */
     @PostMapping(value = "/admin/users")
-    public void addUser(@RequestBody User newUser, @RequestParam(value = "roles") String[] roles) {
+    public ResponseEntity<HttpStatus> addUser(@RequestBody User newUser, @RequestParam("roles") String[] roles) {
         newUser.setRoles(userService.createCollectionRoles(roles));
         userService.save(newUser);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест изменяющий данные пользователя в БД.
-     * ПО ТРЕГУЛОВУ ЖЕЛАТЕЛЬНО УБРАТЬ ИЗ УРЛА "id"!!!!!!!!!!!!!!!!
+     * Метод изменяющий данные пользователя в БД при входе под учёткой админа.
+     * Отправляем обратно HTTP ответ с пустым телом и статусом "200".
+     * ПО ТРЕГУЛОВУ ЖЕЛАТЕЛЬНО УБРАТЬ ИЗ УРЛА "id"!
      * Но его оставил как по Алишеву...
      */
     @PutMapping(value = "/admin/users/{id}")
-    public void editUser(@RequestBody User user) {
+    public ResponseEntity<HttpStatus> editUser(@RequestBody User user) {
         userService.update(user);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест возвращающий данные пользователя из БД по "id".
-     */
-    @GetMapping(value = "/admin/users/{id}")
-    public User editUser(@PathVariable(value = "id") Long id) {
-        return userService.getById(id);
-    }
-
-    /**
-     * В задаче 3.1.5 ДОБАВИЛ !!!
-     * Метод рест удаляющий пользователя из БД.
+     * Метод удаляющий пользователя из БД при входе под учёткой админа.
+     * Отправляем обратно HTTP ответ с пустым телом и статусом "200".
      */
     @DeleteMapping(value = "/admin/users/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

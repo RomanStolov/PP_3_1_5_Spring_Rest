@@ -16,18 +16,15 @@ public class MvcConfig implements WebMvcConfigurer {
      * **********************************************************************************
      * <p>
      * МОИ ДЕЙСТВИЯ:
-     * - Врубил перенаправление урла "/user" на вьюху "user.html"
-     * - Врубил перенаправление урла "/admin/users" на вьюху "admin.html"
-     * - Врубил перенаправление урла "/user" на вьюху "index.html"
-     * - Врубил под требование таски 3.1.4 перенаправление урла "/login" на свою кастомную вьюху с
-     * требуемым оформлением "login.html"
+     * - Врубил перенаправление урла "/user/page" на страницу "user.html";
+     * - Врубил перенаправление урла "/admin/page" на страницу "admin.html";
+     * - Врубил перенаправление урла "/" на главную страницу сайта "index.html";
+     * - Оставил под требование таски 3.1.4 перенаправление урла "/login" на свою кастомную страницу
+     * "login.html"с требуемым в той задаче оформлением.
      */
     public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/admin/users").setViewName("admin/admin");
         registry.addViewController("/admin/page").setViewName("admin/admin");
-//        registry.addViewController("/user").setViewName("user/user");
         registry.addViewController("/user/page").setViewName("user/user");
-
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/login").setViewName("login");
     }

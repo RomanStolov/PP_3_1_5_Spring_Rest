@@ -15,6 +15,11 @@ import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.utils.UserValidator;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Оставил часть функционала в этом простом контроллере для загрузки самих страничек админа и пользователя,
+ * а так же методы регистрации нового пользователя на сайте с главной страницы.
+ * Весь остальной функционал написал в новом REST контроллере.
+ */
 @Controller
 public class PeopleControllerNoRest {
     private final UserServiceImpl userService;
@@ -26,11 +31,17 @@ public class PeopleControllerNoRest {
         this.userValidator = userValidator;
     }
 
+    /**
+     * Метод открывающий страницу админа при входе под админом.
+     */
     @GetMapping(value = "/admin/page")
     public String getAdminPage() {
         return "admin/admin";
     }
 
+    /**
+     * Метод открывающий страницу пользователя при входе под пользователем.
+     */
     @GetMapping(value = "/user/page")
     public String getUserPage() {
         return "user/user";
@@ -38,7 +49,7 @@ public class PeopleControllerNoRest {
 
     /**
      * В задаче 3.1.5 ОСТАВИЛ !!!
-     * Метод возвращающий страницу регистрации нового пользователя на сайте.
+     * Метод возвращающий страницу регистрации нового пользователя с главной страницы сайта.
      */
     @GetMapping(value = "/registration")
     public String registrationForm(@ModelAttribute(value = "registrUser") User registrUser) {
@@ -66,6 +77,5 @@ public class PeopleControllerNoRest {
         userService.save(registrUser);
         return "redirect:/login";
     }
-
 
 }

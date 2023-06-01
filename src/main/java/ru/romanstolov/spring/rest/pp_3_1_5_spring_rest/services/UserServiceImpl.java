@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
      * в переопределённом методе
      * "public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException".
      * <p>
+     *
      * @see UserValidator
      */
     @Override
@@ -74,16 +75,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод новый - добавить описание !!!
-     * Пока нигде не используется.
-     * Ну и пусть полежит...
-     */
-    @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    /**
      * Переименовал метод и дал название как в репозитории
      */
     @Override
@@ -105,11 +96,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Этот метод используется для внесение изменений для УЖЕ СУЩЕСТВУЮЩЕГО пользователя.
+     * Этот метод используется при внесении изменений для УЖЕ СУЩЕСТВУЮЩЕГО пользователя.
      * Изменение пароля я запретил, потому никаких действий с ним я не провожу!
      * Просто перевызываю метод в репозитории для сохранения пользователя с id не равным null.
      * Пароль к изменению администратору недоступен на форме, потому никаких данных с паролем
-     * в этом методе не провожу в отличие от метода "save" сохраняющего нового работника когда
+     * в этом методе не провожу в отличие от метода "save" сохраняющего нового работника, когда
      * требуется шифрование пароля перед сохранением в БД.
      */
     @Transactional
@@ -118,7 +109,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public User getById(Long id) {
+    /**
+     * Переименовал метод и дал название как в репозитории
+     */
+    @Override
+    public User findById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.orElse(null);
     }
@@ -135,15 +130,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Возвращает коллекцию ролей согласно запроса из метода рест-контроллера сохранения нового пользователя
+     * Добавил в таске 3.1.5
+     * Возвращает коллекцию ролей согласно запроса из метода сохранения нового пользователя в рест-контроллере
      */
     @Override
     public Collection<Role> createCollectionRoles(String[] roles) {
         Collection<Role> rolesCollection = new HashSet<>();
-        for (String role: roles) {
+        for (String role : roles) {
             Optional<Role> optionalRole = roleRepository.findByName(role);
             optionalRole.ifPresent(rolesCollection::add);
         }
         return rolesCollection;
     }
+
 }
