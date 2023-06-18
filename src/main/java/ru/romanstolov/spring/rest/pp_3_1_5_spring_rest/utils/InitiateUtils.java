@@ -18,8 +18,8 @@ import java.util.HashSet;
  * - одного пользователя с "ROLE_ADMIN";
  * - пять пользователей с "ROLE_USER";
  * - одного пользователя сразу с "ROLE_ADMIN" и "ROLE_USER" (для проверки функционала чисто);
- * Для того чтобы Spring Boot подхватил на старте в качестве бина и исполнил метод заполняющий первоначально
- * БД я установил аннотацию "@Component"
+ * Установил аннотацию "@Component" для того чтобы Spring Boot подхватил на старте в качестве бина и
+ * исполнил метод заполняющий первоначально БД
  */
 @Component
 public class InitiateUtils implements CommandLineRunner {
@@ -53,7 +53,6 @@ public class InitiateUtils implements CommandLineRunner {
         rolesOnlyUser.add(roleUser);
         rolesAdminAndUser.add(roleUser);
         rolesAdminAndUser.add(roleAdmin);
-
 
         userService
                 .save(new User("admin", "SurnameAdmin", (byte) 60, "email_admin@mail.ru", "admin", rolesOnlyAdmin));

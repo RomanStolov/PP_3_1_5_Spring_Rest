@@ -4,12 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-/**
- * Убрал двунаправленную связь между User и Role присутствующую в прошлой задаче, так как иначе происходила рекурсия
- * в методах рест-контроллера.
- */
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
@@ -18,21 +16,29 @@ public class Role implements GrantedAuthority {
     private Long id;
     @NotEmpty
     private String name;
+    @Transient
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
 
     public Role() {
 
     }
 
-    /**
-     * В этом переопределённом методе прописал возврат "name" для нашей роли
-     */
+    public Role(String name) {
+        this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
     @Override
     public String getAuthority() {
         return name;
-    }
-
-    public Role(String name) {
-        this.name = name;
     }
 
     public Long getId() {
@@ -51,14 +57,6 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    /**
-     * Переопределил метод принимая во внимание, что поле в классе "User" вот такое:
-     * "private Collection<Role> roles = new HashSet<>();".
-     * Для того чтобы имена ролей отображались в форме сделал определение иквэлс в зависимости
-     * только от "name".
-     * И equals() и hashCode() должны быть переопределены, чтобы Spring MVC и Thymeleaf
-     * правильно отображали флажки, когда форма находится в режиме редактирования.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,25 +65,14 @@ public class Role implements GrantedAuthority {
         return name.equals(role.name);
     }
 
-    /**
-     * Переопределил метод принимая во внимание, что поле в классе "User" вот такое:
-     * "private Collection<Role> roles = new HashSet<>();".
-     * Для того чтобы имена ролей отображались в форме сделал подсчёт хэшкода в зависимости
-     * только от "name".
-     * И equals() и hashCode() должны быть переопределены, чтобы Spring MVC и Thymeleaf
-     * правильно отображали флажки, когда форма находится в режиме редактирования.
-     */
     @Override
     public int hashCode() {
         return Objects.hash(name);
     }
 
-    /**
-     * Переопределил метод и оставил только само имя.
-     */
     @Override
     public String toString() {
-        return name;
+        return name.replace("ROLE_", "");
     }
 
 }

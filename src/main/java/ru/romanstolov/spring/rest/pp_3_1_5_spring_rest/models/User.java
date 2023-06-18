@@ -6,53 +6,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.utils.InitiateUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
-/**
- * МОИ ДЕЙСТВИЯ:
- * <p>
- * - Добавил имплементацию "UserDetails" и реализовал в классе все его СЕМЬ методов.
- * <p>
- * - Реализовал связь между таблицей пользователей "users" и таблицей ролей "roles" как "многие-ко-многим".
- * Причём в этой задаче переделал эту связь из двунаправленной в одностороннюю "User->Role". Связующая третья таблица
- * "users_roles" создаётся автоматически.
- * <p>
- * - Добавил каскад "cascade = {CascadeType.PERSIST, CascadeType.MERGE}" над полем со списком ролей. "CascadeType" -
- * этот параметр определяет, что должно происходить с зависимыми сущностями, если мы меняем главную сущность.
- * В JPA спецификации есть такие значения этого параметра:
- * .    - ALL - все действия, которые мы выполняем с родительским объектом, нужно повторить и для его зависимых
- * .            объектов.
- * .    - PERSIST - если мы сохраняем в базу родительский объект, то это же нужно сделать и с его зависимыми
- * .            объектами.
- * .    - MERGE - если мы обновляем в базе родительский объект, то это же нужно сделать и с его зависимыми объектами.
- * .    - REMOVE (DELETE) - если мы удаляем в базе родительский объект, то это же нужно сделать и с его зависимыми
- * .            объектами.
- * .    - REFRESH (SAVE_UPDATE) - дублируют действия, которые выполняются с родительским объектом к его зависимому
- * .            объекту.
- * .    - DETACH - если мы удаляем родительский объект из сессии, то это же нужно сделать и с его зависимыми объектами.
- * Однако Hibernate расширяет эту спецификацию еще на три варианта:
- * .    - REPLICATE
- * .    - SAVE_UPDATE
- * .    - LOCK
- * <p>
- * - Указал "ленивую" загрузку "fetch = FetchType.LAZY" над полем со списком ролей. Параметр fetch позволяет управлять
- * режимами загрузки зависимых объектов. Обычно он принимает одно из двух значений: FetchType.LAZY или FetchType.EAGER.
- * <p>
- * - Убрал валидацию данных над полями "на стороне сервера" в этой задаче по сравнению с прошлой. Так быстрее для
- * тестирования;
- * <p>
- */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @Size(min = 1, max = 25, message = "Введите имя(логин) длиною от 1 до 25 символов!")
     private String username;
+    @NotNull
+    @Size(min = 1, max = 25, message = "Введите фамилию длиною от 1 до 25 символов!")
     private String surname;
+    @Min(value = 1, message = "Введите значение возраста от 1 до 110!")
+    @Max(value = 110, message = "Введите значение возраста от 1 до 110!")
     private Byte age;
+    @Email(message = "Введите правильный адрес почты!")
     private String email;
+    @NotEmpty(message = "Введите пароль!")
     private String password;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
@@ -80,20 +54,6 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    /**
-     * Метод добавления роли пользователю.
-     */
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
-    /**
-     * Метод удаления роли у пользователя.
-     */
-    public void removeRole(Role role) {
-        this.roles.remove(role);
-    }
-
     public Long getId() {
         return id;
     }
@@ -102,10 +62,6 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    /**
-     * В этом переопределённом методе прописал возврат authorities пользователя в виде List<SimpleGrantedAuthority>
-     * представляющего собою ArrayList<SimpleGrantedAuthority> сделанный из Set<Role> текущего пользователя.
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -115,50 +71,31 @@ public class User implements UserDetails {
         return authorities;
     }
 
-    /**
-     * В этом переопределённом методе прописал "true"
-     */
     @Override
     public String getPassword() {
         return password;
     }
 
-    /**
-     * Переименовал у себя в классе "name" в "username"
-     * В этом переопределённом методе прописал возврат "username"
-     */
     @Override
     public String getUsername() {
         return username;
     }
 
-    /**
-     * В этом переопределённом методе прописал "true"
-     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    /**
-     * В этом переопределённом методе прописал "true"
-     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    /**
-     * В этом переопределённом методе прописал "true"
-     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    /**
-     * В этом переопределённом методе прописал "true"
-     */
     @Override
     public boolean isEnabled() {
         return true;
@@ -215,18 +152,6 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(username, surname);
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                '}';
     }
 
 }

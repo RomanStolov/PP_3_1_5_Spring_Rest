@@ -24,7 +24,7 @@ formEdit.addEventListener('submit', async (event) => {
     let surname = document.getElementById('editSurnameEditUser').value;
     let age = document.getElementById('editAgeEditUser').value;
     let email = document.getElementById('editEmailEditUser').value;
-    let password = document.getElementById('noEditPasswordEditUser').value;
+    let password = document.getElementById('editPasswordEditUser').value;
     await fetch(
         urlPutUsers + id,
         {
@@ -204,7 +204,7 @@ async function startEdit(id) {
     document.getElementById('editSurnameEditUser').value = user.surname;
     document.getElementById('editAgeEditUser').value = user.age;
     document.getElementById('editEmailEditUser').value = user.email;
-    document.getElementById('noEditPasswordEditUser').value = user.password;
+    document.getElementById('editPasswordEditUser').value = user.password;
     const response = await fetch(urlGetRoles);
     if (response.ok) {
         const roles = await response.json();
