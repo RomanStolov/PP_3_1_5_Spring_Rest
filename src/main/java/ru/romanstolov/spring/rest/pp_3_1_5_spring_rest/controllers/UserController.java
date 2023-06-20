@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.services.UserServiceImpl;
 
 @Controller
-public class PeopleControllerNoRest {
+public class UserController {
     private final UserServiceImpl userService;
 
     @Autowired
-    public PeopleControllerNoRest(UserServiceImpl userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
