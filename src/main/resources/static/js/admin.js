@@ -1,10 +1,10 @@
 const urlGetUser = 'http://localhost:8080/api/user';
-const urlGetUsers = 'http://localhost:8080/api/admin/users';
-const urlGetRoles = 'http://localhost:8080/api/admin/roles';
-const urlGetUserById = 'http://localhost:8080/api/admin/users/';
-const urlPostUsers = 'http://localhost:8080/api/admin/users';
-const urlDeleteUsers = 'http://localhost:8080/api/admin/users/';
-const urlPutUsers = 'http://localhost:8080/api/admin/users/';
+const urlGetUsers = 'http://localhost:8080/api/users';
+const urlGetRoles = 'http://localhost:8080/api/roles';
+const urlGetUserById = 'http://localhost:8080/api/users/';
+const urlPostUsers = 'http://localhost:8080/api/users';
+const urlDeleteUsers = 'http://localhost:8080/api/users/';
+const urlPutUsers = 'http://localhost:8080/api/users/';
 
 const tableBodyUser = document.getElementById('tableBodyUser');
 const tableBodyUsers = document.getElementById('tableBodyUsers');

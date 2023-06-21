@@ -1,6 +1,7 @@
 package ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

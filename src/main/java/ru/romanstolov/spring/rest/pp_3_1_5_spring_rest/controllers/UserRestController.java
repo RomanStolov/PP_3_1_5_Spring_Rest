@@ -3,6 +3,7 @@ package ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.models.Role;
 import ru.romanstolov.spring.rest.pp_3_1_5_spring_rest.models.User;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
+@Secured("ROLE_ADMIN")
 public class UserRestController {
     private final UserService userService;
     private final RoleService roleService;
@@ -25,40 +27,41 @@ public class UserRestController {
         this.roleService = roleService;
     }
 
-    @GetMapping(value = "/admin/users")
+    @GetMapping(value = "/users")
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/admin/roles")
+    @GetMapping(value = "/roles")
     public ResponseEntity<Collection<Role>> getAllRoles() {
         return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/admin/users/{id}")
+    @GetMapping(value = "/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping(value = "/user")
     public ResponseEntity<User> getUser(Principal principal) {
         return new ResponseEntity<>(userService.findByUsername(principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/admin/users")
+    @PostMapping(value = "/users")
     public ResponseEntity<HttpStatus> addUser(@RequestBody User newUser, @RequestParam("roles") String[] roles) {
         newUser.setRoles(roleService.createCollectionRoles(roles));
         userService.save(newUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "/admin/users/{id}")
+    @PutMapping(value = "/users/{id}")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user) {
         userService.update(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/admin/users/{id}")
+    @DeleteMapping(value = "/users/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
