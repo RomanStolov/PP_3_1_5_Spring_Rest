@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/api")
 public class UserRestController {
     private final UserService userService;
     private final RoleService roleService;

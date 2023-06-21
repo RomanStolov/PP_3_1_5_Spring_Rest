@@ -1,4 +1,4 @@
-const urlGetUser = 'http://localhost:8080/user';
+const urlGetUser = 'http://localhost:8080/api/user';
 
 const tableBodyUser = document.getElementById('tableBodyUser');
 const navbarBrand = document.getElementById('navbarBrand');
